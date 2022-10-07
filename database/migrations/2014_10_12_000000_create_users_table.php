@@ -25,6 +25,10 @@ return new class extends Migration
             $table->boolean('is_trust_member')->default(false);
             $table->string('password');
             $table->string('status')->default(AppConstants::$ACTIVE);
+            $table->double('investment_balance')->default(0.00);
+            $table->double('food_bank_balance')->default(0.00);
+            $table->double('savings_balance')->default(0.00);
+            $table->double('outstanding_loan')->default(0.00);
             $table->rememberToken();
             $table->timestamps();
         });

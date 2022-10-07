@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Utilities\AppHelpers;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use \Flutterwave\Rave;
+use Unicodeveloper\Paystack\Facades\Paystack;
 
 class CardController extends Controller
 {
@@ -15,20 +17,36 @@ class CardController extends Controller
             'transactionId' => 'string|required'
         ]);
 
-        $flw = new Rave(getenv('FLW_SECRET_KEY'));
-        $transactions = new \Flutterwave\Transactions();
-        $response = $transactions->verifyTransaction(['id' => $request->transactionId]);
+        $http = new Client();
+        $res = $http->get("https://api.paystack.co/transaction/verify/" . $request->transactionId, [
+            "headers" => [
+                "Authorization" => "Bearer " . config('paystack.secretKey'),
+            ]
+        ]);
 
-        if (
-            $response['data']['status'] === "successful"
-            // && $response['data']['amount'] === $expectedAmount
-            // && $response['data']['currency'] === $expectedCurrency
-        ) {
-            return AppHelpers::httpResponse(null, "Card Verifed");
-            // Success! Confirm the customer's payment
-        } else {
-            return AppHelpers::httpResponse(null, "Could not verify card payment", 400);
-            // Inform the customer their payment was unsuccessful
+        \Log::info($request->all());
+        try {
+            $response = json_decode($res->getBody(), 1);
+            if (
+                $response['data']['status']
+                // && $response['data']['amount'] === $expectedAmount
+                // && $response['data']['currency'] === $expectedCurrency
+            ) {
+
+                $user = User::find($request->user_id);
+                $user->update([
+                    'savings_plan' => $request->savings_plan
+                ]);
+
+                return AppHelpers::httpResponse(null, "Card Verifed");
+                // Success! Confirm the customer's payment
+            } else {
+                return AppHelpers::httpResponse(null, "Could not verify card payment", 400);
+                // Inform the customer their payment was unsuccessful
+            }
+        } catch (\Exception $ex) {
+            \Log::error($ex);
+            return AppHelpers::httpResponse(null, "Could not verify transaction", 400);
         }
     }
 }

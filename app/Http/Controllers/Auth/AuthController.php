@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Utilities\AppConstants;
 use Mail;
 
 class AuthController extends Controller
@@ -50,7 +51,8 @@ class AuthController extends Controller
             'other_names' => 'string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'password_confirmation' => 'required|min:6,'
+            'password_confirmation' => 'required|min:6,',
+            'is_farmer' => 'required|boolean'
         ]);
 
         $user = User::create([
@@ -59,6 +61,7 @@ class AuthController extends Controller
             'other_names' => $request->other_names,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->is_farmer ? AppConstants::$FARMER : AppConstants::$INVESTOR
         ]);
 
         Mail::to($request->email)->send(new UserRegistrationMail);
@@ -94,7 +97,9 @@ class AuthController extends Controller
     {
         return response()->json([
             'status' => 'success',
-            'user' => Auth::user(),
+            'user' => User::with([
+                'farm',
+            ])->where('id', auth()->id())->first(),
         ]);
     }
 }

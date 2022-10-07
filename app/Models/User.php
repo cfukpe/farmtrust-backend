@@ -27,6 +27,7 @@ class User extends Authenticatable implements JWTSubject
         'is_trust_member',
         'status',
         'password',
+        'savings_plan',
     ];
 
     /**
@@ -66,5 +67,35 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function farm()
+    {
+        return $this->hasOne(Farm::class, 'user_id');
+    }
+
+    public function foodBank()
+    {
+        return $this->hasMany(FoodBank::class, 'user_id');
+    }
+
+    public function trustSubscriptions()
+    {
+        return $this->hasMany(TrustSubscription::class, 'user_id');
+    }
+
+    public function investments()
+    {
+        return $this->hasMany(Investment::class, 'user_id');
+    }
+
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class, 'user_id');
+    }
+
+    public function withdrawalAccounts()
+    {
+        return $this->hasMany(WithdrawalAccount::class, 'user_id');
     }
 }
