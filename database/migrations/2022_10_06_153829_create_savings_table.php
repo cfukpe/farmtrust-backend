@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger("user_id");
+            $table->unsignedBigInteger("saver_id")->nullable();
+            $table->string("voucher_code")->nullable();
+            $table->double("amount")->nullable();
             $table->timestamps();
         });
     }
