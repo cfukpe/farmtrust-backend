@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\FoodBankController;
 use App\Http\Controllers\InvestmentPackageController;
+use App\Http\Controllers\SavingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WithdrawalController;
 use Illuminate\Http\Request;
@@ -51,6 +52,12 @@ Route::controller(FoodBankController::class)->middleware(['auth:api'])->group(fu
 
 Route::controller(WithdrawalController::class)->middleware(['auth:api'])->group(function () {
     Route::get('/user/{user_id}/withdrawals', 'getUserWithdrawals');
+});
+
+Route::controller(SavingController::class)->middleware(['auth:api'])->group(function () {
+    Route::get('/user/{user_id}/saving', 'getUserSavings');
+    Route::get('/user/{user_id}/saving/analytics', 'getUserSavingsAnalytics');
+    Route::post('/user/saving', 'addMoney');
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
