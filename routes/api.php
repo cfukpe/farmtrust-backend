@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\FoodBankController;
 use App\Http\Controllers\InvestmentPackageController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WithdrawalController;
@@ -58,6 +59,11 @@ Route::controller(SavingController::class)->middleware(['auth:api'])->group(func
     Route::get('/user/{user_id}/saving', 'getUserSavings');
     Route::get('/user/{user_id}/saving/analytics', 'getUserSavingsAnalytics');
     Route::post('/user/saving', 'addMoney');
+});
+
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products', 'index');
+    Route::get('/products/{product_id}', 'getSingleProduct');
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
