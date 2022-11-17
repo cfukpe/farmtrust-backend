@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\CorporativeMember;
 use App\Models\Farm;
+use App\Models\FoodBank;
+use App\Models\Investment;
+use App\Models\Saving;
 use App\Models\User;
+use App\Models\Withdrawal;
 use App\Utilities\AppHelpers;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -58,7 +62,7 @@ class UserController extends Controller
                 // Inform the customer their payment was unsuccessful
             }
         } catch (\Exception $ex) {
-            \Log::error($ex);
+            // \Log::error($ex);
             return AppHelpers::httpResponse(null, "Could not verify transaction", 400);
         }
     }
@@ -110,12 +114,28 @@ class UserController extends Controller
                 }
             }
 
-            \Log::info($request->all());
             Db::commit();
             return AppHelpers::httpResponse($farm);
         } catch (\Exception $ex) {
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function getUserHomeAnalytics(Request $request)
+    {
+        $total_savings = Saving::where('user_id', auth()->id())->sum('amount');
+        $total_foodbank = FoodBank::where('user_id', auth()->id())->sum('investment_amount');
+        $total_withdrawals = Withdrawal::where('user_id', auth()->id())->sum('withdrawal_amount');
+        $recent_savings = Saving::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get()->take(5);
+        $recent_investments = Investment::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get()->take(5);
+
+        return AppHelpers::httpResponse([
+            'total_savings' => $total_savings,
+            'total_foodbank' => $total_foodbank,
+            'total_withdrawals' => $total_withdrawals,
+            'recent_savings' => $recent_savings,
+            'recent_investments' => $recent_investments,
+        ]);
     }
 }

@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Utilities\AppConstants;
+use App\Utilities\AppHelpers;
 use Mail;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
@@ -35,7 +37,10 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+        $user = User::with([
+            'farm',
+        ])->where('id', auth()->id())->first();
+
         return response()->json([
             'status' => 'success',
             'user' => $user,
@@ -101,5 +106,28 @@ class AuthController extends Controller
                 'farm',
             ])->where('id', auth()->id())->first(),
         ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'currentPassword' => 'required|string',
+            'newPassword' => 'required|string',
+            'passwordConfirmation' => 'required|string',
+        ]);
+
+
+        $user = User::find(auth()->id());
+
+        if (!\Hash::check($request->currentPassword, $user->password)) {
+            throw new HttpException(400, "Current password is not correct");
+        }
+
+
+        $user->update([
+            'password' => \Hash::make($request->newPassword),
+        ]);
+
+        return AppHelpers::httpResponse($user);
     }
 }

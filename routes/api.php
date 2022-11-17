@@ -22,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/hash-password', function (Request $request) {
+    return \Hash::make(request()->password);
+});
+
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
@@ -29,6 +33,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout');
     Route::get('/my-account', 'account');
     Route::post('/refresh', 'refresh');
+    Route::post('/user/change-password', 'changePassword');
 });
 
 Route::controller(CardController::class)->group(function () {
@@ -39,6 +44,7 @@ Route::controller(CardController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::post('/user/subscription/farm-trust', 'subscribeToFarmTrust');
     Route::post('/user/setting/farm', 'farmSetup');
+    Route::get('/user/home/analytics', 'getUserHomeAnalytics');
 });
 
 Route::controller(InvestmentPackageController::class)->group(function () {
