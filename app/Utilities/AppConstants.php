@@ -10,4 +10,7 @@ class AppConstants
 
     public static $FARMER = 'FARMER';
     public static $INVESTOR = 'INVESTOR';
+
+    public static $PENDING = 'PENDING';
+    public static $VERIFIED = 'VERIFIED';
 }

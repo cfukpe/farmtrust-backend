@@ -13,6 +13,7 @@ class Saving extends Model
         'voucher_code',
         'user_id',
         'saver_id',
-        'amount'
+        'amount',
+        'proof_upload_url'
     ];
 }

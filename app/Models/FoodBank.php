@@ -14,5 +14,8 @@ class FoodBank extends Model
         'investment_amount',
         'saved_by',
         'voucher_code',
+        'proof_upload_url',
+        'verified_by',
+        'verified_on'
     ];
 }
