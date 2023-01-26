@@ -56,6 +56,7 @@ class AuthController extends Controller
             'other_names' => 'string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'phone_number' => 'required|string|max:15|min:11',
             'password_confirmation' => 'required|min:6,',
             'is_farmer' => 'required|boolean'
         ]);
@@ -65,6 +66,7 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'other_names' => $request->other_names,
             'email' => $request->email,
+            'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
             'role' => $request->is_farmer ? AppConstants::$FARMER : AppConstants::$INVESTOR
         ]);
