@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/hash-password', function (Request $request) {
-    \Mail::to('geefive3@gmail.com')->send(new TestMail);
+    \Mail::to(['strattechnologies@gmail.com', 'geefive3@gmail.com'])->send(new TestMail);
     return \Hash::make(request()->password);
 });
 
