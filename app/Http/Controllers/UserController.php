@@ -23,6 +23,39 @@ class UserController extends Controller
     {
         $this->middleware(['auth:api']);
     }
+
+    public function index()
+    {
+        $users = User::orderBy('created_at', 'desc')->get();
+        return AppHelpers::httpResponse($users);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->update($request->all());
+
+        return AppHelpers::httpResponse($user);
+    }
+
+    public function getUserByPhone(Request $request)
+    {
+        $phone_number = $request->phone_number;
+
+        if (!$phone_number) {
+            throw new HttpException(400, "Phone number not found");
+        }
+
+        $user = User::where('phone_number', $phone_number)->first();
+
+        if (!$user) {
+            throw new HttpException(404, 'User with phone number does not exist');
+        }
+
+        return AppHelpers::httpResponse($user);
+    }
+
     public function subscribeToFarmTrust(Request $request)
     {
         $this->validate($request, [

@@ -18,4 +18,18 @@ class FoodBank extends Model
         'verified_by',
         'verified_on'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'verified_by', 'id');
+    }
+    public function agent()
+    {
+        return $this->belongsTo(User::class, 'saver_id', 'id');
+    }
 }

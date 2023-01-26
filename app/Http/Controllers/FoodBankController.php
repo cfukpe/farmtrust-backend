@@ -12,6 +12,27 @@ class FoodBankController extends Controller
 {
     //
 
+    public function index()
+    {
+        $foodbanks = FoodBank::orderBy('created_at', 'desc')->with(['user'])->get();
+        return AppHelpers::httpResponse($foodbanks);
+    }
+
+    public function approveFoodBankSaving($id)
+    {
+        $saving = FoodBank::findOrFail($id);
+
+        $saving->status = AppConstants::$APPROVED;
+        $saving->verified_by = auth()->id();
+        $saving->verified_on = \Carbon\Carbon::now()->toDateTimeString();
+
+        $saving->save();
+
+        $updatedSaving = FoodBank::where('id', $id)->with(['user'])->first();
+
+        return AppHelpers::httpResponse($updatedSaving);
+    }
+
     public function addMoney(Request $request)
     {
         $this->validate($request, [
@@ -61,8 +82,9 @@ class FoodBankController extends Controller
     public function getUserFoodBankSavingsAnalytics($user_id)
     {
         return AppHelpers::httpResponse([
-            'total' => FoodBank::where(['user_id' => $user_id, 'status' => AppConstants::$VERIFIED])->sum('investment_amount'),
+            'total' => FoodBank::where(['user_id' => $user_id,])->sum('investment_amount'),
             'withdrawals' => Withdrawal::where(['user_id' => $user_id, 'status' => AppConstants::$APPROVED])->sum('withdrawal_amount'),
+            'approved' => FoodBank::where(['user_id' => $user_id, 'status' => AppConstants::$APPROVED])->sum('investment_amount')
         ]);
     }
 }

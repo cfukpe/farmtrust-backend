@@ -16,4 +16,19 @@ class Saving extends Model
         'amount',
         'proof_upload_url'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function agent()
+    {
+        return $this->belongsTo(User::class, 'saver_id', 'id');
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'verified_by', 'id');
+    }
 }

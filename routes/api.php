@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/hash-password', function (Request $request) {
-    \Mail::to(['strattechnologies@gmail.com', 'geefive3@gmail.com'])->send(new TestMail);
+    // \Mail::to(['strattechnologies@gmail.com', 'geefive3@gmail.com'])->send(new TestMail);
     return \Hash::make(request()->password);
 });
 
@@ -44,6 +44,9 @@ Route::controller(CardController::class)->group(function () {
 
 
 Route::controller(UserController::class)->group(function () {
+    Route::get('/user', 'index');
+    Route::get('/user/search/by-phone', 'getUserByPhone');
+    Route::patch('/user/{id}', 'updateUser');
     Route::post('/user/subscription/farm-trust', 'subscribeToFarmTrust');
     Route::post('/user/setting/farm', 'farmSetup');
     Route::get('/user/home/analytics', 'getUserHomeAnalytics');
@@ -54,6 +57,8 @@ Route::controller(InvestmentPackageController::class)->group(function () {
 });
 
 Route::controller(FoodBankController::class)->middleware(['auth:api'])->group(function () {
+    Route::patch('/foodbank/{id}/approve', 'approveFoodBankSaving');
+    Route::get('/foodbank', 'index');
     Route::post('/user/foodbank', 'addMoney');
     Route::get('/user/{user_id}/foodbank', 'getUserFoodBankSavings');
     Route::get('/user/{user_id}/foodbank/analytics', 'getUserFoodBankSavingsAnalytics');
@@ -64,9 +69,13 @@ Route::controller(WithdrawalController::class)->middleware(['auth:api'])->group(
 });
 
 Route::controller(SavingController::class)->middleware(['auth:api'])->group(function () {
+    Route::post('/savings/agent', 'agentAddMoney');
+    Route::get('/savings/agent/{id}', 'getAgentSavings');
     Route::get('/user/{user_id}/saving', 'getUserSavings');
     Route::get('/user/{user_id}/saving/analytics', 'getUserSavingsAnalytics');
     Route::post('/user/saving', 'addMoney');
+    Route::get('/savings', 'index');
+    Route::patch('/savings/{id}/approve', 'approveSaving');
 });
 
 Route::controller(ProductController::class)->group(function () {
