@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\FoodBankController;
 use App\Http\Controllers\InvestmentPackageController;
@@ -28,6 +29,7 @@ Route::get('/hash-password', function (Request $request) {
     return \Hash::make(request()->password);
 });
 
+Route::get('banks', [BankController::class, 'index']);
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
