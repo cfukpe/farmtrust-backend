@@ -88,11 +88,11 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products/{product_id}', 'getSingleProduct');
 });
 
+
 Route::controller(InvestmentPackageCategoryController::class)->group(function () {
     Route::get('investment-categories', 'index');
     Route::get('investment-categories/{id}',  'show');
 });
-
 
 Route::middleware(['auth:api'])->group(function () {
     Route::middleware('admin')->group(function () {
