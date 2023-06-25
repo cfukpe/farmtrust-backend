@@ -1,17 +1,19 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\FoodBankController;
-use App\Http\Controllers\InvestmentPackageController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SavingController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\WithdrawalController;
 use App\Mail\TestMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SavingController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\FoodBankController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\InvestmentPackageCategoryController;
+use App\Http\Controllers\WithdrawalController;
+use App\Http\Controllers\InvestmentPackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/hash-password', function (Request $request) {
     // \Mail::to(['strattechnologies@gmail.com', 'geefive3@gmail.com'])->send(new TestMail);
-    return \Hash::make(request()->password);
+    return Hash::make(request()->password);
 });
 
 Route::get('banks', [BankController::class, 'index']);
@@ -80,10 +82,29 @@ Route::controller(SavingController::class)->middleware(['auth:api'])->group(func
     Route::patch('/savings/{id}/approve', 'approveSaving');
 });
 
+
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index');
     Route::get('/products/{product_id}', 'getSingleProduct');
 });
+
+Route::controller(InvestmentPackageCategoryController::class)->group(function () {
+    Route::get('investment-categories', 'index');
+    Route::get('investment-categories/{id}',  'show');
+});
+
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::middleware('admin')->group(function () {
+        Route::prefix('investment-categories')->name('investmentCategory.')->group(function () {
+            Route::post('', [InvestmentPackageCategoryController::class, 'store']);
+            Route::patch('/{id}', [InvestmentPackageCategoryController::class, 'update']);
+            Route::delete('/{id}', [InvestmentPackageCategoryController::class, 'destroy']);
+        });
+    });
+});
+
+
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
