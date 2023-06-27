@@ -94,12 +94,24 @@ Route::controller(InvestmentPackageCategoryController::class)->group(function ()
     Route::get('investment-categories/{id}',  'show');
 });
 
+Route::controller(InvestmentPackageController::class)->group(function () {
+    Route::get('investment-packages', 'index');
+    Route::get('investment-packages/{id}',  'show');
+});
+
 Route::middleware(['auth:api'])->group(function () {
     Route::middleware('admin')->group(function () {
+
         Route::prefix('investment-categories')->name('investmentCategory.')->group(function () {
             Route::post('', [InvestmentPackageCategoryController::class, 'store']);
-            Route::patch('/{id}', [InvestmentPackageCategoryController::class, 'update']);
+            Route::post('/{id}', [InvestmentPackageCategoryController::class, 'update']);
             Route::delete('/{id}', [InvestmentPackageCategoryController::class, 'destroy']);
+        });
+
+        Route::prefix('investment-packages')->name('investmentPackage.')->group(function () {
+            Route::post('', [InvestmentPackageController::class, 'store']);
+            Route::post('/{id}', [InvestmentPackageController::class, 'update']);
+            Route::delete('/{id}', [InvestmentPackageController::class, 'destroy']);
         });
     });
 });

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class InvestmentPackageCategoryResource extends JsonResource
+class InvestmentPackageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +16,17 @@ class InvestmentPackageCategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'category_name' => $this->investment_category_name,
-            'cover_image' => $this->investment_category_cover_image,
+            'investment_category_id' => $this->investment_category_id,
+            'package_name' => $this->package_name,
+            'unit_price' => $this->unit_price,
+            'duration' => $this->duration,
+            'return_rate' => $this->return_rate,
+            'package_available_units' => $this->package_available_units,
+            'package_image_url' => $this->package_image_url,
             'status' => $this->status,
-            'category_description' => $this->investment_category_description,
+            'package_description' => $this->package_description,
             'created_at' => $this->created_at->format('Y-m-d', 'h:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d', 'h:i:s'),
-            'investment_packages' => InvestmentPackageResource::collection($this->whenLoaded('investmentPackages'))
         ];
     }
 }
