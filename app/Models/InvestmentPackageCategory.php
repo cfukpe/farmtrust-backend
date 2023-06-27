@@ -10,4 +10,9 @@ class InvestmentPackageCategory extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function investmentPackages()
+    {
+        return $this->hasMany(InvestmentPackage::class, 'investment_category_id');
+    }
 }

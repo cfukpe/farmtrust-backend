@@ -27,8 +27,8 @@ class UpdateInvestmentPackageCategoryRequest extends FormRequest
     {
         return [
             'investment_category_name' => ['filled', Rule::unique('investment_package_categories')->ignore($this->id)],
-            'investment_category_description' => 'nullable',
-            'investment_category_cover_image' => 'image|nullable|string',
+            'investment_category_description' => 'filled|nullable',
+            'investment_category_cover_image' => 'filled|image|nullable|string',
             'status' => 'filled|string|in:' . AppConstants::$ACTIVE . ',' . AppConstants::$INACTIVE
         ];
     }
