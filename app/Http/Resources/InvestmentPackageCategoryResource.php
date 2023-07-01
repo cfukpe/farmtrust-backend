@@ -20,8 +20,8 @@ class InvestmentPackageCategoryResource extends JsonResource
             'cover_image' => $this->investment_category_cover_image,
             'status' => $this->status,
             'category_description' => $this->investment_category_description,
-            'created_at' => $this->created_at->format('Y-m-d', 'h:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d', 'h:i:s'),
+            'created_at' => $this->created_at->format('Y-m-d h:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d  h:i:s'),
             'investment_packages' => InvestmentPackageResource::collection($this->whenLoaded('investmentPackages'))
         ];
     }
